@@ -1,0 +1,16 @@
+{% extends "base.html" %}
+
+{% block title %}Game Home{% endblock %}
+
+{% block content %}
+<div class="container">
+    <nav class="navbar">
+        <h1>Game Home</h1>
+        <a href="{{ url_for('logout') }}" class="btn">Logout</a>
+    </nav>
+    <div class="game-content">
+        <h2>Welcome, {{ session['user_email'] }}!</h2>
+        <!-- Add game content here -->
+    </div>
+</div>
+{% endblock %} 
