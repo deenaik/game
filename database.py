@@ -6,7 +6,9 @@ class Database:
     def __init__(self):
         self.conn = None
         self.connect()
-        self.drop_tables()
+
+    def init_db(self):
+        """Initialize database tables if they don't exist"""
         self.create_tables()
 
     def connect(self):
@@ -130,10 +132,4 @@ class Database:
 
     def close(self):
         if self.conn:
-            self.conn.close()
-
-    def drop_tables(self):
-        cursor = self.conn.cursor()
-        cursor.execute("DROP TABLE IF EXISTS parents")
-        cursor.execute("DROP TABLE IF EXISTS children")
-        self.conn.commit() 
+            self.conn.close() 

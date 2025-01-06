@@ -5,7 +5,10 @@ from config import Config
 
 app = Flask(__name__)
 app.secret_key = Config.SECRET_KEY
+
+# Initialize database only once when the application starts
 db = Database()
+db.init_db()
 
 # Login required decorator
 def login_required(f):
