@@ -1,14 +1,11 @@
 from flask import Flask, render_template, request, redirect, url_for, flash, session
 from functools import wraps
+from database import Database
+from config import Config
 
 app = Flask(__name__)
-app.secret_key = 'your-secret-key-here'  # Required for sessions and flash messages
-
-# Temporary user storage (replace with database in production)
-users = {
-    'parents': {},
-    'children': {}
-}
+app.secret_key = Config.SECRET_KEY
+db = Database()
 
 # Login required decorator
 def login_required(f):
@@ -33,13 +30,20 @@ def login():
         email = request.form['email']
         password = request.form['password']
         
-        if email in users['parents'] and users['parents'][email]['password'] == password:
+        # Try parent login
+        parent = db.verify_parent(email, password)
+        if parent:
             session['user_email'] = email
             session['user_type'] = 'parent'
+            session['user_name'] = parent['name']
             return redirect(url_for('dashboard'))
-        elif email in users['children'] and users['children'][email]['password'] == password:
+        
+        # Try child login
+        child = db.verify_child(email, password)
+        if child:
             session['user_email'] = email
             session['user_type'] = 'child'
+            session['user_name'] = child['name']
             return redirect(url_for('game_home'))
         
         flash('Invalid credentials')
@@ -53,21 +57,17 @@ def register(user_type):
         password = request.form['password']
         related_email = request.form['related_email']
         
+        success = False
         if user_type == 'parent':
-            users['parents'][email] = {
-                'name': name,
-                'password': password,
-                'child_email': related_email
-            }
+            success = db.create_parent(name, email, password, related_email)
         else:
-            users['children'][email] = {
-                'name': name,
-                'password': password,
-                'parent_email': related_email
-            }
+            success = db.create_child(name, email, password, related_email)
         
-        flash('Registration successful! Please login.')
-        return redirect(url_for('login'))
+        if success:
+            flash('Registration successful! Please login.')
+            return redirect(url_for('login'))
+        else:
+            flash('Registration failed. Please try again.')
     
     return render_template('register.html', user_type=user_type)
 
