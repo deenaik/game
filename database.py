@@ -36,7 +36,8 @@ class Database:
                 password_hash VARCHAR(255) NOT NULL,
                 child_email VARCHAR(100),
                 created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
-                PRIMARY KEY (id, email)
+                PRIMARY KEY (id, email),
+                INDEX parent_email_idx (email)
             )
         """)
         
@@ -49,24 +50,10 @@ class Database:
                 password_hash VARCHAR(255) NOT NULL,
                 parent_email VARCHAR(100),
                 created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
-                PRIMARY KEY (id, email)
+                PRIMARY KEY (id, email),
+                INDEX child_email_idx (email)
             )
         """)
-        
-        # Create reference indexes (without IF NOT EXISTS)
-        try:
-            cursor.execute("""
-                CREATE REFERENCE INDEX parent_email_idx ON parents (email)
-            """)
-        except Exception as e:
-            print(f"Index parent_email_idx might already exist: {e}")
-        
-        try:
-            cursor.execute("""
-                CREATE REFERENCE INDEX child_email_idx ON children (email)
-            """)
-        except Exception as e:
-            print(f"Index child_email_idx might already exist: {e}")
         
         self.conn.commit()
 
@@ -132,4 +119,13 @@ class Database:
 
     def close(self):
         if self.conn:
-            self.conn.close() 
+            self.conn.close()
+
+    def get_children_for_parent(self, parent_email):
+        cursor = self.conn.cursor()
+        cursor.execute("""
+            SELECT name, email 
+            FROM children 
+            WHERE parent_email = %s
+        """, (parent_email,))
+        return cursor.fetchall() 

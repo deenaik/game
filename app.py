@@ -79,7 +79,9 @@ def register(user_type):
 def dashboard():
     if session.get('user_type') != 'parent':
         return redirect(url_for('game_home'))
-    return render_template('dashboard.html')
+    
+    children = db.get_children_for_parent(session['user_email'])
+    return render_template('dashboard.html', children=children)
 
 @app.route('/game-home')
 @login_required

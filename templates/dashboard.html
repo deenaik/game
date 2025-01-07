@@ -10,7 +10,34 @@
     </nav>
     <div class="dashboard-content">
         <h2>Welcome, {{ session['user_name'] }}!</h2>
-        <!-- Add dashboard content here -->
+        
+        <div class="dashboard-actions">
+            <a href="{{ url_for('register', user_type='child') }}" class="btn primary">
+                <i class="fas fa-plus"></i> Add New Child
+            </a>
+        </div>
+
+        <div class="children-grid">
+            {% if children %}
+                {% for child in children %}
+                <div class="child-card">
+                    <div class="child-info">
+                        <h3>{{ child[0] }}</h3>
+                        <p>{{ child[1] }}</p>
+                    </div>
+                    <div class="child-actions">
+                        <button class="btn secondary view-progress">View Progress</button>
+                        <button class="btn secondary view-stats">View Stats</button>
+                    </div>
+                </div>
+                {% endfor %}
+            {% else %}
+                <div class="no-children">
+                    <p>No children registered yet.</p>
+                    <p>Click "Add New Child" to register a child.</p>
+                </div>
+            {% endif %}
+        </div>
     </div>
 </div>
 {% endblock %} 

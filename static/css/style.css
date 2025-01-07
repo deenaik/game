@@ -100,3 +100,79 @@ body {
         margin: 1rem;
     }
 } 
+
+/* Dashboard Styles */
+.dashboard-actions {
+    margin: 2rem 0;
+    text-align: right;
+}
+
+.children-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+    gap: 2rem;
+    margin-top: 2rem;
+}
+
+.child-card {
+    background: white;
+    border-radius: 8px;
+    padding: 1.5rem;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+    transition: transform 0.2s ease;
+}
+
+.child-card:hover {
+    transform: translateY(-5px);
+}
+
+.child-info {
+    margin-bottom: 1rem;
+}
+
+.child-info h3 {
+    color: #333;
+    margin-bottom: 0.5rem;
+}
+
+.child-info p {
+    color: #666;
+    font-size: 0.9rem;
+}
+
+.child-actions {
+    display: flex;
+    gap: 1rem;
+}
+
+.child-actions button {
+    flex: 1;
+    font-size: 0.9rem;
+}
+
+.no-children {
+    text-align: center;
+    padding: 3rem;
+    background: white;
+    border-radius: 8px;
+    grid-column: 1 / -1;
+}
+
+.no-children p {
+    color: #666;
+    margin-bottom: 1rem;
+}
+
+/* Button variations */
+.btn.view-progress {
+    background: #28a745;
+}
+
+.btn.view-stats {
+    background: #17a2b8;
+}
+
+/* Add icon styles */
+.btn i {
+    margin-right: 0.5rem;
+} 
