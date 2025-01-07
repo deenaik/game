@@ -116,7 +116,10 @@ def update_allowance(child_email):
         return redirect(url_for('game_home'))
     
     amount = request.form.get('amount')
-    if db.update_monthly_allowance(child_email, amount):
+    allowance_day = request.form.get('allowance_day')
+    start_date = request.form.get('start_date')
+    
+    if db.update_monthly_allowance(child_email, amount, allowance_day, start_date):
         flash('Monthly allowance updated successfully')
     else:
         flash('Failed to update monthly allowance')

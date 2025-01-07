@@ -42,8 +42,9 @@
                         <div class="earning-info">
                             <p class="amount">${{ "%.2f"|format(earning[0]) }}</p>
                             <p class="description">{{ earning[1] }}</p>
+                            <span class="earning-type {{ earning[2] }}">{{ earning[2]|title }}</span>
                         </div>
-                        <p class="date">{{ earning[2].strftime('%Y-%m-%d %H:%M') }}</p>
+                        <p class="date">{{ earning[3].strftime('%Y-%m-%d %H:%M') }}</p>
                     </div>
                     {% endfor %}
                 </div>
@@ -60,9 +61,21 @@
         <h2>Update Monthly Allowance</h2>
         <form action="{{ url_for('update_allowance', child_email=child[1]) }}" method="POST">
             <div class="form-group">
-                <label for="amount">New Monthly Amount ($)</label>
+                <label for="amount">Monthly Amount ($)</label>
                 <input type="number" step="0.01" min="0" id="amount" name="amount" 
                        value="{{ child[2] or 0 }}" required>
+            </div>
+            <div class="form-group">
+                <label for="allowance_day">Day of Month</label>
+                <input type="number" min="1" max="31" id="allowance_day" name="allowance_day" 
+                       value="{{ child[5] or 1 }}" required>
+                <small>Day of the month when allowance is given</small>
+            </div>
+            <div class="form-group">
+                <label for="start_date">Start Date</label>
+                <input type="date" id="start_date" name="start_date" 
+                       value="{{ child[6].strftime('%Y-%m-%d') if child[6] else '' }}" required>
+                <small>When should allowance payments begin?</small>
             </div>
             <div class="modal-actions">
                 <button type="button" class="btn secondary" onclick="hideAllowanceModal()">Cancel</button>
