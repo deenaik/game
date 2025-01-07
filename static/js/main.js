@@ -29,4 +29,28 @@ document.querySelectorAll('form').forEach(form => {
             alert('Password must be at least 6 characters long');
         }
     });
-}); 
+});
+
+// Add these functions
+function showAllowanceModal() {
+    document.getElementById('allowanceModal').style.display = 'block';
+}
+
+function hideAllowanceModal() {
+    document.getElementById('allowanceModal').style.display = 'none';
+}
+
+function showEarningsModal() {
+    document.getElementById('earningsModal').style.display = 'block';
+}
+
+function hideEarningsModal() {
+    document.getElementById('earningsModal').style.display = 'none';
+}
+
+// Close modals when clicking outside
+window.onclick = function(event) {
+    if (event.target.className === 'modal') {
+        event.target.style.display = 'none';
+    }
+} 

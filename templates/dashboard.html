@@ -20,7 +20,7 @@
         <div class="children-grid">
             {% if children %}
                 {% for child in children %}
-                <div class="child-card">
+                <div class="child-card" onclick="window.location.href='{{ url_for('child_details', child_email=child[1]) }}'">
                     <div class="child-info">
                         <h3>{{ child[0] }}</h3>
                         <p>{{ child[1] }}</p>

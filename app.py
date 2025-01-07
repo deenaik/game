@@ -8,7 +8,6 @@ app.secret_key = Config.SECRET_KEY
 
 # Initialize database only once when the application starts
 db = Database()
-db.init_db()
 
 # Login required decorator
 def login_required(f):
@@ -94,6 +93,51 @@ def game_home():
 def logout():
     session.clear()
     return redirect(url_for('login'))
+
+@app.route('/child/<child_email>')
+@login_required
+def child_details(child_email):
+    if session.get('user_type') != 'parent':
+        return redirect(url_for('game_home'))
+    
+    child = db.get_child_details(child_email)
+    earnings_history = db.get_earnings_history(child_email)
+    
+    if not child:
+        flash('Child not found')
+        return redirect(url_for('dashboard'))
+    
+    return render_template('child_details.html', child=child, earnings=earnings_history)
+
+@app.route('/child/<child_email>/update-allowance', methods=['POST'])
+@login_required
+def update_allowance(child_email):
+    if session.get('user_type') != 'parent':
+        return redirect(url_for('game_home'))
+    
+    amount = request.form.get('amount')
+    if db.update_monthly_allowance(child_email, amount):
+        flash('Monthly allowance updated successfully')
+    else:
+        flash('Failed to update monthly allowance')
+    
+    return redirect(url_for('child_details', child_email=child_email))
+
+@app.route('/child/<child_email>/add-earnings', methods=['POST'])
+@login_required
+def add_earnings(child_email):
+    if session.get('user_type') != 'parent':
+        return redirect(url_for('game_home'))
+    
+    amount = request.form.get('amount')
+    description = request.form.get('description')
+    
+    if db.add_earnings(child_email, amount, description):
+        flash('Earnings added successfully')
+    else:
+        flash('Failed to add earnings')
+    
+    return redirect(url_for('child_details', child_email=child_email))
 
 if __name__ == '__main__':
     app.run(debug=True) 
