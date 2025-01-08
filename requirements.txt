@@ -3,3 +3,5 @@ python-dotenv==1.0.0
 singlestoredb==1.0.4
 bcrypt==4.0.1
 pytest==7.1.2
+docker==5.0.3
+docker-compose==1.29.2
